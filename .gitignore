@@ -1,0 +1,20 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Flutter
+.dart_tool/
+.packages
+build/
+
+# Firebase
+.firebase/
+firebase-debug.log
+serviceAccountKey.json
+
+# Environment Variables (API Keys)
+.env
+.env.local
+
+# OS
+.DS_Store
