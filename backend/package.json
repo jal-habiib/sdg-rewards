@@ -1,0 +1,20 @@
+{
+  "name": "sdg-rewards-backend",
+  "version": "1.0.0",
+  "description": "Backend for SDG Rewards hackathon project",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node seed.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "firebase-admin": "^12.0.0",
+    "@google/generative-ai": "^0.2.1"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
