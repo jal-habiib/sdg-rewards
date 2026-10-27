@@ -75,15 +75,27 @@ async function seed() {
 
   for (const codeId of codes) {
     const signature = generateSignature(codeId, CAMPAIGN_ID, POINTS);
+
+    // Build and stringify the qr_data payload (encoded into the physical QR code)
+    const qr_data = JSON.stringify({
+      code: codeId,
+      campaign: CAMPAIGN_ID,
+      points: POINTS,
+      sig: signature,
+    });
+
     await db.collection("codes").doc(codeId).set({
       code_id: codeId,
       campaign_id: CAMPAIGN_ID,
       points: POINTS,
       signature,
+      qr_data,
       status: "unused",
       created_at: admin.firestore.FieldValue.serverTimestamp(),
     });
-    console.log(`✓ codes/${codeId} seeded  |  sig: ${signature.slice(0, 16)}...`);
+
+    console.log(`\n✓ codes/${codeId} seeded`);
+    console.log(`  qr_data → ${qr_data}`);
   }
 
   console.log("\n✅ All seed data written to Firestore successfully.");

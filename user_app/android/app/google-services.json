@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1091643374720",
+    "project_id": "sdg-rewards",
+    "storage_bucket": "sdg-rewards.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1091643374720:android:d8cf68b5121fc13fc67a65",
+        "android_client_info": {
+          "package_name": "com.example.user_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCY1rrnvlVKsJWDaweVWHelYNqKaqLzOlA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

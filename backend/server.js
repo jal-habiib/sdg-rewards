@@ -35,16 +35,16 @@ function generateSignature(codeId, campaignId, points) {
  * Expected qr_data shape: { codeId, campaignId, points, signature }
  */
 function verifyQRSignature(qrData) {
-  const { codeId, campaignId, points, signature } = qrData;
-  if (!codeId || !campaignId || points === undefined || !signature) {
+  const { code, campaign, points, sig } = qrData;
+  if (!code || !campaign || points === undefined || !sig) {
     return false;
   }
-  const expected = generateSignature(codeId, campaignId, points);
+  const expected = generateSignature(code, campaign, points);
   // Constant-time comparison to prevent timing attacks
   try {
     return crypto.timingSafeEqual(
       Buffer.from(expected, "hex"),
-      Buffer.from(signature, "hex")
+      Buffer.from(sig, "hex")
     );
   } catch {
     return false;
@@ -79,7 +79,7 @@ app.post("/api/earn", async (req, res) => {
       return res.status(401).json({ error: "Invalid QR signature" });
     }
 
-    const { campaignId, points } = qr_data;
+    const { campaign: campaignId } = qr_data;
     const POINTS_AWARD = 50;
     const UGX_VALUE = 2000;
     const PROGRAM_ID = "nutrition"; // derived from campaign context

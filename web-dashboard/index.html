@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nutrition Program Dashboard - SDG 2 Zero Hunger</title>
+  <meta name="description"
+    content="Sponsor dashboard for the SDG 2 Nutrition Rewards program. Monitor pool funds and transaction history in real time." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --green-700: #2E7D32;
+      --green-600: #388E3C;
+      --green-100: #E8F5E9;
+      --green-50: #F1F8F2;
+      --grey-900: #111827;
+      --grey-700: #374151;
+      --grey-500: #6B7280;
+      --grey-300: #D1D5DB;
+      --grey-100: #F3F4F6;
+      --grey-50: #F9FAFB;
+      --white: #FFFFFF;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .05);
+      --shadow-md: 0 4px 12px rgba(0, 0, 0, .08), 0 2px 4px rgba(0, 0, 0, .04);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    html {
+      font-family: 'Inter', system-ui, sans-serif;
+      font-size: 15px;
+      color: var(--grey-900);
+      background: var(--grey-50);
+    }
+
+    /* ── Layout ──────────────────────────────────────────── */
+    .page-wrap {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px 64px;
+    }
+
+    /* ── Top Bar ─────────────────────────────────────────── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-300);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .topbar-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      height: 64px;
+    }
+
+    .topbar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .topbar-logo svg {
+      flex-shrink: 0;
+    }
+
+    .topbar-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--grey-900);
+      letter-spacing: -.01em;
+    }
+
+    .topbar-subtitle {
+      font-size: 12px;
+      color: var(--grey-500);
+      font-weight: 400;
+    }
+
+    .topbar-pill {
+      margin-left: auto;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--green-100);
+      color: var(--green-700);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .live-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--green-700);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .4
+      }
+    }
+
+    /* ── Page Hero ───────────────────────────────────────── */
+    .hero {
+      padding: 40px 0 28px;
+      border-bottom: 1px solid var(--grey-300);
+      margin-bottom: 36px;
+    }
+
+    .hero-eyebrow {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--green-700);
+      margin-bottom: 6px;
+    }
+
+    .hero-title {
+      font-size: 26px;
+      font-weight: 700;
+      color: var(--grey-900);
+      letter-spacing: -.03em;
+      margin-bottom: 4px;
+    }
+
+    .hero-sub {
+      font-size: 14px;
+      color: var(--grey-500);
+    }
+
+    /* ── Stat Cards ──────────────────────────────────────── */
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 36px;
+    }
+
+    .card {
+      background: var(--white);
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius);
+      padding: 24px 24px 22px;
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow .15s;
+    }
+
+    .card:hover {
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .card-label {
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--grey-500);
+    }
+
+    .card-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-icon--green {
+      background: var(--green-100);
+    }
+
+    .card-icon--slate {
+      background: var(--grey-100);
+    }
+
+    .card-value {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      color: var(--grey-900);
+      line-height: 1;
+      margin-bottom: 6px;
+    }
+
+    .card-value--loading {
+      background: var(--grey-100);
+      border-radius: 6px;
+      width: 140px;
+      height: 32px;
+      animation: shimmer 1.4s linear infinite;
+    }
+
+    @keyframes shimmer {
+      0% {
+        opacity: .6
+      }
+
+      50% {
+        opacity: 1
+      }
+
+      100% {
+        opacity: .6
+      }
+    }
+
+    .card-currency {
+      font-size: 13px;
+      color: var(--grey-500);
+      margin-top: 2px;
+    }
+
+    /* ── Section Header ──────────────────────────────────── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--grey-900);
+    }
+
+    .section-badge {
+      font-size: 12px;
+      color: var(--grey-500);
+      background: var(--grey-100);
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+
+    /* ── Table ───────────────────────────────────────────── */
+    .table-wrap {
+      background: var(--white);
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      overflow: hidden;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+    }
+
+    thead {
+      background: var(--grey-50);
+      border-bottom: 1px solid var(--grey-300);
+    }
+
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--grey-500);
+    }
+
+    td {
+      padding: 13px 16px;
+      border-bottom: 1px solid var(--grey-100);
+      color: var(--grey-700);
+      vertical-align: middle;
+    }
+
+    tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    tbody tr:hover td {
+      background: var(--grey-50);
+    }
+
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    .badge--earn {
+      background: var(--green-100);
+      color: var(--green-700);
+    }
+
+    .badge--spend {
+      background: #FEF9C3;
+      color: #854D0E;
+    }
+
+    .mono {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 12px;
+      color: var(--grey-500);
+    }
+
+    /* ── Empty / Error ───────────────────────────────────── */
+    .table-placeholder {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--grey-500);
+      font-size: 13px;
+    }
+
+    /* ── Error banner ────────────────────────────────────── */
+    .error-banner {
+      background: #FEF2F2;
+      border: 1px solid #FECACA;
+      color: #B91C1C;
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      font-size: 13px;
+      margin-bottom: 24px;
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topbar-logo">
+        <!-- Leaf SVG icon -->
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M21 3C21 3 14 3 9 8C4 13 3 21 3 21C3 21 8 20 11 17C14 14 14 10 14 10C14 10 18 10 21 7C22.5 5.5 21 3 21 3Z"
+            fill="#2E7D32" opacity=".2" />
+          <path
+            d="M21 3C21 3 14 3 9 8C4 13 3 21 3 21C3 21 8 20 11 17C14 14 14 10 14 10C14 10 18 10 21 7C22.5 5.5 21 3 21 3Z"
+            stroke="#2E7D32" stroke-width="1.8" stroke-linejoin="round" />
+          <path d="M3 21L10 14" stroke="#2E7D32" stroke-width="1.8" stroke-linecap="round" />
+        </svg>
+        <div>
+          <div class="topbar-title">Nutrition Program</div>
+          <div class="topbar-subtitle">SDG 2: Zero Hunger</div>
+        </div>
+      </div>
+      <div class="topbar-pill">
+        <span class="live-dot"></span>
+        Live
+      </div>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-eyebrow">Sponsor Dashboard</div>
+      <h1 class="hero-title">Program Fund Overview</h1>
+      <p class="hero-sub">Real-time pool balances and transaction history from Firestore.</p>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="error-banner" id="errorBanner"></div>
+
+    <!-- Stat Cards -->
+    <div class="cards">
+
+      <!-- Pool Deposited -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Pool Deposited</span>
+          <span class="card-icon card-icon--green">
+            <!-- Bank / deposit icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M3 9L12 4L21 9" stroke="#2E7D32" stroke-width="1.8" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <rect x="3" y="9" width="18" height="2" rx="1" fill="#2E7D32" opacity=".3" />
+              <path d="M5 11V18M9 11V18M13 11V18M17 11V18M3 18H21" stroke="#2E7D32" stroke-width="1.8"
+                stroke-linecap="round" />
+            </svg>
+          </span>
+        </div>
+        <div class="card-value" id="valDeposited">
+          <div class="card-value--loading"></div>
+        </div>
+        <div class="card-currency">Uganda Shillings (UGX)</div>
+      </div>
+
+      <!-- Pool Spent -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Pool Spent</span>
+          <span class="card-icon card-icon--slate">
+            <!-- Wallet icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M20 7H4C2.9 7 2 7.9 2 9V19C2 20.1 2.9 21 4 21H20C21.1 21 22 20.1 22 19V9C22 7.9 21.1 7 20 7Z"
+                stroke="#6B7280" stroke-width="1.8" stroke-linejoin="round" />
+              <path d="M16 7V5C16 3.9 15.1 3 14 3H10C8.9 3 8 3.9 8 5V7" stroke="#6B7280" stroke-width="1.8"
+                stroke-linecap="round" />
+              <circle cx="16" cy="14" r="2" fill="#6B7280" opacity=".5" />
+            </svg>
+          </span>
+        </div>
+        <div class="card-value" id="valSpent">
+          <div class="card-value--loading"></div>
+        </div>
+        <div class="card-currency">Uganda Shillings (UGX)</div>
+      </div>
+
+      <!-- Available Balance -->
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Available Balance</span>
+          <span class="card-icon card-icon--green">
+            <!-- Bar chart icon -->
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="3" y="12" width="4" height="9" rx="1.5" fill="#2E7D32" opacity=".4" />
+              <rect x="10" y="7" width="4" height="14" rx="1.5" fill="#2E7D32" opacity=".7" />
+              <rect x="17" y="3" width="4" height="18" rx="1.5" fill="#2E7D32" />
+            </svg>
+          </span>
+        </div>
+        <div class="card-value" id="valAvailable">
+          <div class="card-value--loading"></div>
+        </div>
+        <div class="card-currency">Uganda Shillings (UGX)</div>
+      </div>
+
+    </div>
+
+    <!-- Transactions Table -->
+    <div class="section-header">
+      <span class="section-title">Recent Transactions</span>
+      <span class="section-badge" id="txCount">Loading...</span>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>User ID</th>
+            <th>Code / Reward</th>
+            <th>Points</th>
+            <th>Value (UGX)</th>
+            <th>Timestamp</th>
+          </tr>
+        </thead>
+        <tbody id="txBody">
+          <tr>
+            <td colspan="6">
+              <div class="table-placeholder">Loading transactions...</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ── Firebase Web SDK v10 (ES Modules CDN) ─────────────────── -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getFirestore, doc, getDoc, collection, query, orderBy, limit, onSnapshot }
+      from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyAUurCZM6XMC-LVLBg5JvLM_7KViFu9RoQ",
+      authDomain: "sdg-rewards.firebaseapp.com",
+      projectId: "sdg-rewards",
+      storageBucket: "sdg-rewards.firebasestorage.app",
+      messagingSenderId: "1091643374720",
+      appId: "1:1091643374720:web:160a7f43b8c84259c67a65"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const fmt = (n) => typeof n === 'number' ? n.toLocaleString('en-UG') : '—';
+
+    function showError(msg) {
+      const el = document.getElementById('errorBanner');
+      el.textContent = msg; el.style.display = 'block';
+    }
+
+    // ── Stat Cards ───────────────────────────────────────────────
+    const programRef = doc(db, 'programs', 'nutrition');
+    onSnapshot(programRef, (snap) => {
+      if (!snap.exists()) { showError('programs/nutrition document not found.'); return; }
+      const d = snap.data();
+      document.getElementById('valDeposited').textContent = fmt(d.pool_deposited);
+      document.getElementById('valSpent').textContent = fmt(d.pool_spent);
+      document.getElementById('valAvailable').textContent = fmt(d.pool_available);
+    }, (err) => showError('Firestore error: ' + err.message));
+
+    // ── Transactions Table ───────────────────────────────────────
+    const txQuery = query(collection(db, 'transactions'), orderBy('created_at', 'desc'), limit(10));
+
+    onSnapshot(txQuery, (snap) => {
+      const tbody = document.getElementById('txBody');
+      const badge = document.getElementById('txCount');
+
+      if (snap.empty) {
+        tbody.innerHTML = `<tr><td colspan="6"><div class="table-placeholder">No transactions yet.</div></td></tr>`;
+        badge.textContent = '0 records';
+        return;
+      }
+
+      badge.textContent = `${snap.size} records`;
+
+      tbody.innerHTML = snap.docs.map(d => {
+        const tx = d.data();
+        const type = tx.type || '—';
+        const uid = tx.user_id || '—';
+        const codeOrReward = tx.code_id || tx.reward_id || '—';
+        const pts = tx.points ?? tx.points_spent ?? '—';
+        const ugx = tx.ugx_value != null ? fmt(tx.ugx_value) : '—';
+        const ts = tx.created_at?.toDate
+          ? tx.created_at.toDate().toLocaleString('en-UG', { hour12: false })
+          : '—';
+        const badgeClass = type === 'earn' ? 'badge--earn' : 'badge--spend';
+
+        return `
+        <tr>
+          <td><span class="badge ${badgeClass}">${type}</span></td>
+          <td>${uid}</td>
+          <td class="mono">${codeOrReward}</td>
+          <td>${pts}</td>
+          <td>${ugx}</td>
+          <td class="mono">${ts}</td>
+        </tr>`;
+      }).join('');
+    }, (err) => showError('Failed to load transactions: ' + err.message));
+  </script>
+
+</body>
+
+</html>

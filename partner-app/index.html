@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Partner QR Generator - SDG Rewards</title>
+  <meta name="description" content="Generate spend QR codes for the SDG Rewards nutrition program at point of sale." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- QRCode.js CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green-700: #2E7D32;
+      --green-600: #388E3C;
+      --green-100: #E8F5E9;
+      --grey-900: #111827;
+      --grey-700: #374151;
+      --grey-500: #6B7280;
+      --grey-300: #D1D5DB;
+      --grey-100: #F3F4F6;
+      --grey-50:  #F9FAFB;
+      --white:    #FFFFFF;
+      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
+      --shadow-md: 0 8px 24px rgba(0,0,0,.09), 0 2px 6px rgba(0,0,0,.05);
+      --radius:   14px;
+      --radius-sm: 8px;
+    }
+
+    html, body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--grey-50);
+      color: var(--grey-900);
+      min-height: 100vh;
+    }
+
+    /* ── Top Bar ─────────────────────────────────────────── */
+    .topbar {
+      background: var(--white);
+      border-bottom: 1px solid var(--grey-300);
+      padding: 0 24px; height: 60px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .topbar-title { font-size: 14px; font-weight: 600; color: var(--grey-900); }
+    .topbar-sub   { font-size: 12px; color: var(--grey-500); }
+
+    /* ── Center Layout ───────────────────────────────────── */
+    .center {
+      min-height: calc(100vh - 60px);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 48px 24px;
+      gap: 32px; flex-wrap: wrap;
+    }
+
+    /* ── Card ────────────────────────────────────────────── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      padding: 32px;
+    }
+    .card--form  { width: 100%; max-width: 420px; }
+    .card--qr    { width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; }
+
+    /* ── Form ────────────────────────────────────────────── */
+    .card-title {
+      font-size: 17px; font-weight: 700; color: var(--grey-900);
+      letter-spacing: -.02em; margin-bottom: 6px;
+    }
+    .card-desc { font-size: 13px; color: var(--grey-500); margin-bottom: 28px; line-height: 1.55; }
+
+    .field { margin-bottom: 20px; }
+    .field label {
+      display: block; font-size: 12px; font-weight: 500;
+      letter-spacing: .04em; text-transform: uppercase;
+      color: var(--grey-700); margin-bottom: 7px;
+    }
+    .field select,
+    .field input {
+      width: 100%; height: 42px;
+      border: 1px solid var(--grey-300); border-radius: var(--radius-sm);
+      padding: 0 12px; font-size: 14px; font-family: inherit;
+      color: var(--grey-900); background: var(--white);
+      transition: border-color .15s, box-shadow .15s;
+      outline: none; appearance: none;
+    }
+    .field select:focus,
+    .field input:focus {
+      border-color: var(--green-700);
+      box-shadow: 0 0 0 3px rgba(46,125,50,.12);
+    }
+    .field-hint { font-size: 11.5px; color: var(--grey-500); margin-top: 5px; }
+
+    /* ── Button ──────────────────────────────────────────── */
+    .btn-primary {
+      width: 100%; height: 44px;
+      background: var(--green-700); color: var(--white);
+      border: none; border-radius: var(--radius-sm);
+      font-family: inherit; font-size: 14px; font-weight: 600;
+      cursor: pointer; letter-spacing: .01em;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+      transition: background .15s, transform .1s, box-shadow .15s;
+      box-shadow: 0 2px 6px rgba(46,125,50,.30);
+      margin-top: 8px;
+    }
+    .btn-primary:hover  { background: var(--green-600); box-shadow: 0 4px 12px rgba(46,125,50,.35); }
+    .btn-primary:active { transform: scale(.98); }
+
+    /* ── QR Panel ────────────────────────────────────────── */
+    .qr-title {
+      font-size: 13px; font-weight: 600; color: var(--grey-700);
+      margin-bottom: 20px; text-align: center; letter-spacing: .01em;
+    }
+    .qr-box {
+      width: 220px; height: 220px;
+      border: 1.5px dashed var(--grey-300);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+      background: var(--white); margin-bottom: 20px;
+      transition: border-color .2s;
+    }
+    .qr-box.has-qr { border-style: solid; border-color: var(--green-700); }
+
+    /* placeholder inside qr-box before generate */
+    .qr-placeholder {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+    }
+    .qr-placeholder svg { opacity: .25; }
+    .qr-placeholder span { font-size: 12px; color: var(--grey-500); text-align: center; }
+
+    .qr-payload {
+      background: var(--grey-50); border: 1px solid var(--grey-300);
+      border-radius: var(--radius-sm); padding: 10px 12px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 10.5px; color: var(--grey-700);
+      word-break: break-all; line-height: 1.5;
+      max-width: 280px; display: none;
+    }
+
+    .btn-secondary {
+      margin-top: 14px; width: 100%; height: 38px;
+      background: transparent; color: var(--green-700);
+      border: 1.5px solid var(--green-700);
+      border-radius: var(--radius-sm); font-family: inherit;
+      font-size: 13px; font-weight: 500; cursor: pointer;
+      transition: background .15s;
+      display: none;
+    }
+    .btn-secondary:hover { background: var(--green-100); }
+
+    /* ── Divider ─────────────────────────────────────────── */
+    .divider { width: 1px; background: var(--grey-300); min-height: 360px; align-self: stretch; display: none; }
+    @media (min-width: 800px) { .divider { display: block; } }
+  </style>
+</head>
+<body>
+
+<!-- Top Bar -->
+<header class="topbar">
+  <!-- QR code icon -->
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3"  y="3"  width="7" height="7" rx="1.5" stroke="#2E7D32" stroke-width="1.7"/>
+    <rect x="14" y="3"  width="7" height="7" rx="1.5" stroke="#2E7D32" stroke-width="1.7"/>
+    <rect x="3"  y="14" width="7" height="7" rx="1.5" stroke="#2E7D32" stroke-width="1.7"/>
+    <rect x="5"  y="5"  width="3" height="3" rx=".5" fill="#2E7D32"/>
+    <rect x="16" y="5"  width="3" height="3" rx=".5" fill="#2E7D32"/>
+    <rect x="5"  y="16" width="3" height="3" rx=".5" fill="#2E7D32"/>
+    <path d="M14 14H17M17 14V17M17 17H20M20 17V20M20 20H14M14 20V17" stroke="#2E7D32" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  <div>
+    <div class="topbar-title">Partner QR Generator</div>
+    <div class="topbar-sub">SDG Rewards - Point of Sale</div>
+  </div>
+</header>
+
+<div class="center">
+
+  <!-- Form Card -->
+  <div class="card card--form">
+    <h1 class="card-title">Generate Spend QR Code</h1>
+    <p class="card-desc">Configure the reward and partner details, then generate a QR code for the customer to scan at checkout.</p>
+
+    <div class="field">
+      <label for="rewardSelect">Reward</label>
+      <select id="rewardSelect">
+        <option value="veg-discount">Veg Discount — 50 pts / 2,000 UGX</option>
+      </select>
+      <div class="field-hint">The reward the customer will redeem.</div>
+    </div>
+
+    <div class="field">
+      <label for="partnerInput">Partner ID</label>
+      <input
+        type="text"
+        id="partnerInput"
+        value="mama-alice-shop"
+        placeholder="e.g. mama-alice-shop"
+      />
+      <div class="field-hint">Your registered partner identifier.</div>
+    </div>
+
+    <button class="btn-primary" id="generateBtn" onclick="generateQR()">
+      <!-- QR icon small -->
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="3" y="3" width="7" height="7" rx="1.2" stroke="white" stroke-width="1.8"/>
+        <rect x="14" y="3" width="7" height="7" rx="1.2" stroke="white" stroke-width="1.8"/>
+        <rect x="3" y="14" width="7" height="7" rx="1.2" stroke="white" stroke-width="1.8"/>
+        <rect x="5" y="5" width="3" height="3" rx=".4" fill="white"/>
+        <rect x="16" y="5" width="3" height="3" rx=".4" fill="white"/>
+        <rect x="5" y="16" width="3" height="3" rx=".4" fill="white"/>
+      </svg>
+      Generate QR Code
+    </button>
+  </div>
+
+  <!-- Vertical Divider (desktop) -->
+  <div class="divider"></div>
+
+  <!-- QR Display Card -->
+  <div class="card card--qr">
+    <div class="qr-title">Scan to Redeem Reward</div>
+
+    <div class="qr-box" id="qrBox">
+      <div class="qr-placeholder" id="qrPlaceholder">
+        <!-- Large QR placeholder icon -->
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="3" y="3" width="7" height="7" rx="1.5" stroke="#374151" stroke-width="1.5"/>
+          <rect x="14" y="3" width="7" height="7" rx="1.5" stroke="#374151" stroke-width="1.5"/>
+          <rect x="3" y="14" width="7" height="7" rx="1.5" stroke="#374151" stroke-width="1.5"/>
+          <rect x="5" y="5" width="3" height="3" rx=".5" fill="#374151"/>
+          <rect x="16" y="5" width="3" height="3" rx=".5" fill="#374151"/>
+          <rect x="5" y="16" width="3" height="3" rx=".5" fill="#374151"/>
+          <path d="M14 14H17M17 14V17M17 17H20M20 17V20M20 20H14M14 20V17" stroke="#374151" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>QR code will appear here</span>
+      </div>
+      <!-- QR code renders here -->
+      <div id="qrCanvas" style="display:none;"></div>
+    </div>
+
+    <div class="qr-payload" id="qrPayload"></div>
+
+    <button class="btn-secondary" id="downloadBtn" onclick="downloadQR()">Download PNG</button>
+  </div>
+
+</div>
+
+<script>
+  let lastPayload = '';
+
+  function generateQR() {
+    const rewardId  = document.getElementById('rewardSelect').value.trim();
+    const partnerId = document.getElementById('partnerInput').value.trim();
+
+    if (!partnerId) {
+      alert('Please enter a Partner ID.');
+      return;
+    }
+
+    const payload = JSON.stringify({
+      type:       "spend",
+      reward_id:  rewardId,
+      partner_id: partnerId,
+    });
+    lastPayload = payload;
+
+    // Clear previous QR
+    const canvas = document.getElementById('qrCanvas');
+    canvas.innerHTML = '';
+
+    // Generate new QR code
+    new QRCode(canvas, {
+      text:          payload,
+      width:         200,
+      height:        200,
+      colorDark:     "#1a1a1a",
+      colorLight:    "#ffffff",
+      correctLevel:  QRCode.CorrectLevel.H,
+    });
+
+    // Show QR, hide placeholder
+    document.getElementById('qrPlaceholder').style.display = 'none';
+    canvas.style.display = 'block';
+    document.getElementById('qrBox').classList.add('has-qr');
+
+    // Show payload + download button
+    const payloadEl = document.getElementById('qrPayload');
+    payloadEl.textContent = payload;
+    payloadEl.style.display = 'block';
+
+    document.getElementById('downloadBtn').style.display = 'block';
+  }
+
+  function downloadQR() {
+    const img = document.querySelector('#qrCanvas img');
+    if (!img) return;
+    const a = document.createElement('a');
+    a.href     = img.src;
+    a.download = 'sdg-rewards-qr.png';
+    a.click();
+  }
+</script>
+
+</body>
+</html>
