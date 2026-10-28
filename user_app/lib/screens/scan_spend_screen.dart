@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:http/http.dart' as http;
 
-const _kApiBase = 'https://sdg-rewards.onrender.com';
+const _kApiBase = 'http://localhost:3000';
 
 class ScanSpendScreen extends StatefulWidget {
   const ScanSpendScreen({super.key});
