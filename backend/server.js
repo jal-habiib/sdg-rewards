@@ -1,7 +1,9 @@
+require('dotenv').config();
 const express = require("express");
 const cors = require("cors");
 const admin = require("firebase-admin");
 const crypto = require("crypto");
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 // ─── Firebase Admin Init ────────────────────────────────────────────────────
 let serviceAccount;
@@ -251,6 +253,75 @@ app.post("/api/spend", async (req, res) => {
 });
 
 // ─── Health Check ────────────────────────────────────────────────────────────
+// ─── POST /api/verify-social (Gemini AI) ────────────────────────────────────
+app.post("/api/verify-social", async (req, res) => {
+  try {
+    const { user_id, imageBase64 } = req.body;
+
+    if (!user_id || !imageBase64) {
+      return res.status(400).json({ error: "Missing user_id or imageBase64" });
+    }
+
+    // Initialize Gemini
+    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+
+    const prompt = `Analyze this social media screenshot. Does it show:
+1. A healthy meal (vegetables, fruits, legumes, or whole grains)?
+2. The hashtag #NutritionUG?
+Respond in strict JSON only: {"verified": true/false, "confidence": 0.0-1.0, "reason": "short explanation"}`;
+
+    // Call Gemini API
+    const result = await model.generateContent([
+      prompt,
+      { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
+    ]);
+
+    const text = result.response.text();
+    const jsonStr = text.replace(/```json|```/g, "").trim();
+    const parsed = JSON.parse(jsonStr);
+
+    if (parsed.verified && parsed.confidence >= 0.7) {
+      const POINTS_AWARD = 30;
+      const PROGRAM_ID = "nutrition";
+      const balanceId = `${user_id}_${PROGRAM_ID}`;
+
+      const balanceRef = db.collection("balances").doc(balanceId);
+      const txRef = db.collection("transactions").doc();
+
+      const batch = db.batch();
+
+      batch.update(balanceRef, {
+        points: admin.firestore.FieldValue.increment(POINTS_AWARD),
+      });
+
+      batch.set(txRef, {
+        type: "earn",
+        user_id,
+        campaign_id: "social-media",
+        points: POINTS_AWARD,
+        ugx_value: 0,
+        program_id: PROGRAM_ID,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      await batch.commit();
+
+      return res.status(200).json({
+        verified: true,
+        points_earned: POINTS_AWARD,
+        confidence: parsed.confidence,
+        message: `Verified! You earned ${POINTS_AWARD} points.`
+      });
+    }
+
+    return res.status(200).json({ verified: false, reason: parsed.reason });
+
+  } catch (err) {
+    console.error("Gemini Error:", err);
+    return res.status(500).json({ error: "Verification failed", details: err.message });
+  }
+});
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", timestamp: new Date().toISOString() });
 });

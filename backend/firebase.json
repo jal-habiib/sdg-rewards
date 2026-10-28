@@ -1,4 +1,12 @@
 {
+  "hosting": {
+    "public": "../web-dashboard",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  },
   "emulators": {
     "singleProjectMode": true,
     "auth": {
