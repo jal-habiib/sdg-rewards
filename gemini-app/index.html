@@ -1,38 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Social Verification - SDG Rewards</title>
-  <meta name="description" content="Upload a photo of a qualifying SDG action to earn nutrition reward points via AI verification." />
+  <meta name="description"
+    content="Upload a photo of a qualifying SDG action to earn nutrition reward points via AI verification." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
       --green-700: #2E7D32;
       --green-600: #388E3C;
       --green-100: #E8F5E9;
-      --green-50:  #F1F8F2;
+      --green-50: #F1F8F2;
       --grey-900: #111827;
       --grey-700: #374151;
       --grey-500: #6B7280;
       --grey-300: #D1D5DB;
       --grey-100: #F3F4F6;
-      --grey-50:  #F9FAFB;
-      --white:    #FFFFFF;
-      --red-50:   #FEF2F2;
-      --red-600:  #DC2626;
-      --red-300:  #FCA5A5;
-      --shadow-sm: 0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.05);
-      --shadow-md: 0 8px 24px rgba(0,0,0,.09), 0 2px 6px rgba(0,0,0,.05);
-      --radius:   14px;
+      --grey-50: #F9FAFB;
+      --white: #FFFFFF;
+      --red-50: #FEF2F2;
+      --red-600: #DC2626;
+      --red-300: #FCA5A5;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .05);
+      --shadow-md: 0 8px 24px rgba(0, 0, 0, .09), 0 2px 6px rgba(0, 0, 0, .05);
+      --radius: 14px;
       --radius-sm: 8px;
     }
 
-    html, body {
+    html,
+    body {
       font-family: 'Inter', system-ui, sans-serif;
       background: var(--grey-50);
       color: var(--grey-900);
@@ -43,16 +52,30 @@
     .topbar {
       background: var(--white);
       border-bottom: 1px solid var(--grey-300);
-      padding: 0 24px; height: 60px;
-      display: flex; align-items: center; gap: 10px;
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .topbar-title { font-size: 14px; font-weight: 600; color: var(--grey-900); }
-    .topbar-sub   { font-size: 12px; color: var(--grey-500); }
+
+    .topbar-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--grey-900);
+    }
+
+    .topbar-sub {
+      font-size: 12px;
+      color: var(--grey-500);
+    }
 
     /* ── Center Layout ───────────────────────────────────── */
     .center {
       min-height: calc(100vh - 60px);
-      display: flex; align-items: flex-start; justify-content: center;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
       padding: 48px 24px;
     }
 
@@ -63,19 +86,32 @@
       border-radius: var(--radius);
       box-shadow: var(--shadow-sm);
       padding: 36px 32px;
-      width: 100%; max-width: 500px;
+      width: 100%;
+      max-width: 500px;
     }
 
     .card-eyebrow {
-      font-size: 11px; font-weight: 500; letter-spacing: .08em;
-      text-transform: uppercase; color: var(--green-700); margin-bottom: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--green-700);
+      margin-bottom: 6px;
     }
+
     .card-title {
-      font-size: 20px; font-weight: 700; color: var(--grey-900);
-      letter-spacing: -.025em; margin-bottom: 6px;
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--grey-900);
+      letter-spacing: -.025em;
+      margin-bottom: 6px;
     }
+
     .card-desc {
-      font-size: 13px; color: var(--grey-500); margin-bottom: 28px; line-height: 1.6;
+      font-size: 13px;
+      color: var(--grey-500);
+      margin-bottom: 28px;
+      line-height: 1.6;
     }
 
     /* ── Drop Zone ───────────────────────────────────────── */
@@ -90,322 +126,400 @@
       margin-bottom: 20px;
       background: var(--grey-50);
     }
+
     .dropzone:hover,
-    .dropzone.dragover { border-color: var(--green-700); background: var(--green-50); }
-    .dropzone.has-image { border-style: solid; border-color: var(--green-700); padding: 0; overflow: hidden; }
+    .dropzone.dragover {
+      border-color: var(--green-700);
+      background: var(--green-50);
+    }
+
+    .dropzone.has-image {
+      border-style: solid;
+      border-color: var(--green-700);
+      padding: 0;
+      overflow: hidden;
+    }
 
     .dropzone input[type="file"] {
-      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
     }
 
-    .dz-icon { margin-bottom: 12px; }
-    .dz-label { font-size: 14px; font-weight: 500; color: var(--grey-700); margin-bottom: 4px; }
-    .dz-hint  { font-size: 12px; color: var(--grey-500); }
+    .dz-icon {
+      margin-bottom: 12px;
+    }
+
+    .dz-label {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--grey-700);
+      margin-bottom: 4px;
+    }
+
+    .dz-hint {
+      font-size: 12px;
+      color: var(--grey-500);
+    }
 
     .preview-img {
-      width: 100%; max-height: 260px;
-      object-fit: cover; display: none;
+      width: 100%;
+      max-height: 260px;
+      object-fit: cover;
+      display: none;
       border-radius: calc(var(--radius) - 2px);
     }
+
     .preview-footer {
-      display: none; align-items: center; gap: 8px;
+      display: none;
+      align-items: center;
+      gap: 8px;
       padding: 10px 14px;
-      background: var(--green-50); border-top: 1px solid var(--green-100);
+      background: var(--green-50);
+      border-top: 1px solid var(--green-100);
     }
+
     .preview-filename {
-      font-size: 12px; color: var(--green-700); font-weight: 500;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1;
+      font-size: 12px;
+      color: var(--green-700);
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
     }
+
     .preview-clear {
-      background: none; border: none; cursor: pointer; padding: 2px;
-      color: var(--grey-500); flex-shrink: 0; line-height: 0;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 2px;
+      color: var(--grey-500);
+      flex-shrink: 0;
+      line-height: 0;
     }
-    .preview-clear:hover { color: var(--red-600); }
+
+    .preview-clear:hover {
+      color: var(--red-600);
+    }
 
     /* ── Button ──────────────────────────────────────────── */
     .btn-primary {
-      width: 100%; height: 46px;
-      background: var(--green-700); color: var(--white);
-      border: none; border-radius: var(--radius-sm);
-      font-family: inherit; font-size: 15px; font-weight: 600;
-      cursor: pointer; letter-spacing: .01em;
-      display: flex; align-items: center; justify-content: center; gap: 9px;
+      width: 100%;
+      height: 46px;
+      background: var(--green-700);
+      color: var(--white);
+      border: none;
+      border-radius: var(--radius-sm);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      letter-spacing: .01em;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
       transition: background .15s, transform .1s, box-shadow .15s;
-      box-shadow: 0 2px 8px rgba(46,125,50,.30);
+      box-shadow: 0 2px 8px rgba(46, 125, 50, .30);
     }
-    .btn-primary:hover:not(:disabled)  { background: var(--green-600); box-shadow: 0 4px 14px rgba(46,125,50,.35); }
-    .btn-primary:active:not(:disabled) { transform: scale(.98); }
-    .btn-primary:disabled { opacity: .55; cursor: not-allowed; }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--green-600);
+      box-shadow: 0 4px 14px rgba(46, 125, 50, .35);
+    }
+
+    .btn-primary:active:not(:disabled) {
+      transform: scale(.98);
+    }
+
+    .btn-primary:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
 
     /* ── Spinner ─────────────────────────────────────────── */
     .spinner {
-      width: 20px; height: 20px;
-      border: 2.5px solid rgba(255,255,255,.3);
+      width: 20px;
+      height: 20px;
+      border: 2.5px solid rgba(255, 255, 255, .3);
       border-top-color: #fff;
       border-radius: 50%;
       animation: spin .7s linear infinite;
       flex-shrink: 0;
     }
-    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
     /* ── Result Banner ───────────────────────────────────── */
     .result {
-      margin-top: 20px; border-radius: var(--radius-sm);
-      padding: 16px 18px; font-size: 13.5px; line-height: 1.55;
+      margin-top: 20px;
+      border-radius: var(--radius-sm);
+      padding: 16px 18px;
+      font-size: 13.5px;
+      line-height: 1.55;
       display: none;
     }
+
     .result--success {
-      background: var(--green-100); border: 1px solid #A5D6A7;
+      background: var(--green-100);
+      border: 1px solid #A5D6A7;
       color: var(--green-700);
     }
+
     .result--error {
-      background: var(--red-50); border: 1px solid var(--red-300);
+      background: var(--red-50);
+      border: 1px solid var(--red-300);
       color: var(--red-600);
     }
-    .result-title { font-weight: 600; margin-bottom: 4px; font-size: 14px; }
-    .result-body  { font-size: 13px; }
+
+    .result-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+
+    .result-body {
+      font-size: 13px;
+    }
 
     /* ── User ID row ─────────────────────────────────────── */
-    .field { margin-bottom: 20px; }
-    .field label {
-      display: block; font-size: 12px; font-weight: 500;
-      letter-spacing: .04em; text-transform: uppercase;
-      color: var(--grey-700); margin-bottom: 7px;
+    .field {
+      margin-bottom: 20px;
     }
+
+    .field label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+      color: var(--grey-700);
+      margin-bottom: 7px;
+    }
+
     .field input {
-      width: 100%; height: 42px;
-      border: 1px solid var(--grey-300); border-radius: var(--radius-sm);
-      padding: 0 12px; font-size: 14px; font-family: inherit;
-      color: var(--grey-900); background: var(--white);
+      width: 100%;
+      height: 42px;
+      border: 1px solid var(--grey-300);
+      border-radius: var(--radius-sm);
+      padding: 0 12px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--grey-900);
+      background: var(--white);
       transition: border-color .15s, box-shadow .15s;
       outline: none;
     }
+
     .field input:focus {
       border-color: var(--green-700);
-      box-shadow: 0 0 0 3px rgba(46,125,50,.12);
+      box-shadow: 0 0 0 3px rgba(46, 125, 50, .12);
     }
 
-    .separator { height: 1px; background: var(--grey-100); margin: 24px 0; }
+    .separator {
+      height: 1px;
+      background: var(--grey-100);
+      margin: 24px 0;
+    }
   </style>
 </head>
+
 <body>
 
-<!-- Top Bar -->
-<header class="topbar">
-  <!-- Camera / social icon -->
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z" stroke="#2E7D32" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-    <circle cx="12" cy="13" r="4" stroke="#2E7D32" stroke-width="1.7"/>
-  </svg>
-  <div>
-    <div class="topbar-title">Social Verification</div>
-    <div class="topbar-sub">SDG Rewards - AI Photo Verification</div>
-  </div>
-</header>
-
-<div class="center">
-  <div class="card">
-    <div class="card-eyebrow">Gemini AI Verification</div>
-    <h1 class="card-title">Verify &amp; Earn Points</h1>
-    <p class="card-desc">Upload a photo of a qualifying nutrition action (buying vegetables, cooking healthy food). Our AI will verify your submission and award reward points.</p>
-
-    <!-- User ID -->
-    <div class="field">
-      <label for="userIdInput">User ID</label>
-      <input type="text" id="userIdInput" value="mama-alice" placeholder="e.g. mama-alice" />
+  <!-- Top Bar -->
+  <header class="topbar">
+    <!-- Camera / social icon -->
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M23 19C23 19.5304 22.7893 20.0391 22.4142 20.4142C22.0391 20.7893 21.5304 21 21 21H3C2.46957 21 1.96086 20.7893 1.58579 20.4142C1.21071 20.0391 1 19.5304 1 19V8C1 7.46957 1.21071 6.96086 1.58579 6.58579C1.96086 6.21071 2.46957 6 3 6H7L9 3H15L17 6H21C21.5304 6 22.0391 6.21071 22.4142 6.58579C22.7893 6.96086 23 7.46957 23 8V19Z"
+        stroke="#2E7D32" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+      <circle cx="12" cy="13" r="4" stroke="#2E7D32" stroke-width="1.7" />
+    </svg>
+    <div>
+      <div class="topbar-title">Social Verification</div>
+      <div class="topbar-sub">SDG Rewards - AI Photo Verification</div>
     </div>
+  </header>
 
-    <div class="separator"></div>
+  <div class="center">
+    <div class="card">
+      <div class="card-eyebrow">Gemini AI Verification</div>
+      <h1 class="card-title">Verify &amp; Earn Points</h1>
+      <p class="card-desc">Upload a photo of a qualifying nutrition action (buying vegetables, cooking healthy food).
+        Our AI will verify your submission and award reward points.</p>
 
-    <!-- Drop Zone -->
-    <div class="dropzone" id="dropzone">
-      <input type="file" id="fileInput" accept="image/*" onchange="onFileSelect(event)" />
-
-      <!-- Placeholder content -->
-      <div id="dzContent">
-        <div class="dz-icon">
-          <!-- Upload icon -->
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#9CA3AF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            <polyline points="17 8 12 3 7 8" stroke="#9CA3AF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
-            <line x1="12" y1="3" x2="12" y2="15" stroke="#9CA3AF" stroke-width="1.7" stroke-linecap="round"/>
-          </svg>
-        </div>
-        <div class="dz-label">Drag &amp; drop a photo here</div>
-        <div class="dz-hint">or click to browse &mdash; JPG, PNG, WEBP up to 10MB</div>
+      <!-- User ID -->
+      <div class="field">
+        <label for="userIdInput">User ID</label>
+        <input type="text" id="userIdInput" value="mama-alice" placeholder="e.g. mama-alice" />
       </div>
 
-      <!-- Preview -->
-      <img class="preview-img" id="previewImg" alt="Selected photo preview" />
-    </div>
+      <div class="separator"></div>
 
-    <!-- Preview footer (outside dropzone to avoid overlay issues) -->
-    <div class="preview-footer" id="previewFooter">
-      <!-- Checkmark -->
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-        <circle cx="12" cy="12" r="10" fill="#2E7D32" opacity=".15"/>
-        <path d="M7 12L10.5 15.5L17 9" stroke="#2E7D32" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      <span class="preview-filename" id="previewFilename"></span>
-      <button class="preview-clear" id="clearBtn" onclick="clearImage()" title="Remove image" aria-label="Remove selected image">
+      <!-- Drop Zone -->
+      <div class="dropzone" id="dropzone">
+        <input type="file" id="fileInput" accept="image/*" onchange="onFileSelect(event)" />
+
+        <!-- Placeholder content -->
+        <div id="dzContent">
+          <div class="dz-icon">
+            <!-- Upload icon -->
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15"
+                stroke="#9CA3AF" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" />
+              <polyline points="17 8 12 3 7 8" stroke="#9CA3AF" stroke-width="1.7" stroke-linecap="round"
+                stroke-linejoin="round" />
+              <line x1="12" y1="3" x2="12" y2="15" stroke="#9CA3AF" stroke-width="1.7" stroke-linecap="round" />
+            </svg>
+          </div>
+          <div class="dz-label">Drag &amp; drop a photo here</div>
+          <div class="dz-hint">or click to browse &mdash; JPG, PNG, WEBP up to 10MB</div>
+        </div>
+
+        <!-- Preview -->
+        <img class="preview-img" id="previewImg" alt="Selected photo preview" />
+      </div>
+
+      <!-- Preview footer (outside dropzone to avoid overlay issues) -->
+      <div class="preview-footer" id="previewFooter">
+        <!-- Checkmark -->
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-          <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="2" stroke-linecap="round"/>
+          <circle cx="12" cy="12" r="10" fill="#2E7D32" opacity=".15" />
+          <path d="M7 12L10.5 15.5L17 9" stroke="#2E7D32" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round" />
         </svg>
+        <span class="preview-filename" id="previewFilename"></span>
+        <button class="preview-clear" id="clearBtn" onclick="clearImage()" title="Remove image"
+          aria-label="Remove selected image">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+            <path d="M18 6L6 18M6 6L18 18" stroke="#6B7280" stroke-width="2" stroke-linecap="round" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Submit button -->
+      <button class="btn-primary" id="submitBtn" onclick="submitVerification()" style="margin-top: 20px;">
+        <!-- Sparkle icon -->
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path
+            d="M12 2L13.09 8.26L19 7L15.45 11.73L21 14L15.45 16.27L19 21L13.09 15.74L12 22L10.91 15.74L5 21L8.55 16.27L3 14L8.55 11.73L5 7L10.91 8.26L12 2Z"
+            stroke="white" stroke-width="1.6" stroke-linejoin="round" fill="rgba(255,255,255,.15)" />
+        </svg>
+        <span id="btnLabel">Verify &amp; Earn</span>
       </button>
-    </div>
 
-    <!-- Submit button -->
-    <button class="btn-primary" id="submitBtn" onclick="submitVerification()" style="margin-top: 20px;">
-      <!-- Sparkle icon -->
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M12 2L13.09 8.26L19 7L15.45 11.73L21 14L15.45 16.27L19 21L13.09 15.74L12 22L10.91 15.74L5 21L8.55 16.27L3 14L8.55 11.73L5 7L10.91 8.26L12 2Z" stroke="white" stroke-width="1.6" stroke-linejoin="round" fill="rgba(255,255,255,.15)"/>
-      </svg>
-      <span id="btnLabel">Verify &amp; Earn</span>
-    </button>
-
-    <!-- Result Banner -->
-    <div class="result" id="resultBanner">
-      <div class="result-title" id="resultTitle"></div>
-      <div class="result-body"  id="resultBody"></div>
+      <!-- Result Banner -->
+      <div class="result" id="resultBanner">
+        <div class="result-title" id="resultTitle"></div>
+        <div class="result-body" id="resultBody"></div>
+      </div>
     </div>
   </div>
-</div>
 
-<script>
-  const API_URL = 'https://sdg-rewards.onrender.com/api/verify-social';
-  let selectedFile = null;
-  let isLoading    = false;
+  <script>
+    let selectedFile = null;
 
-  // ── Drag & Drop events ───────────────────────────────────────
-  const dropzone = document.getElementById('dropzone');
-
-  dropzone.addEventListener('dragover', (e) => {
-    e.preventDefault(); dropzone.classList.add('dragover');
-  });
-  dropzone.addEventListener('dragleave', () => dropzone.classList.remove('dragover'));
-  dropzone.addEventListener('drop', (e) => {
-    e.preventDefault(); dropzone.classList.remove('dragover');
-    const file = e.dataTransfer?.files?.[0];
-    if (file && file.type.startsWith('image/')) loadPreview(file);
-  });
-
-  function onFileSelect(e) {
-    const file = e.target.files?.[0];
-    if (file) loadPreview(file);
-  }
-
-  function loadPreview(file) {
-    selectedFile = file;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      const img = document.getElementById('previewImg');
-      img.src = e.target.result;
-      img.style.display = 'block';
-      document.getElementById('dzContent').style.display = 'none';
-      dropzone.classList.add('has-image');
-
-      const footer = document.getElementById('previewFooter');
-      footer.style.display = 'flex';
-      document.getElementById('previewFilename').textContent = file.name;
+    // Handle file selection (Matches onchange in HTML)
+    window.onFileSelect = function (event) {
+      selectedFile = event.target.files[0];
+      if (selectedFile) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          document.getElementById('previewImg').src = e.target.result;
+          document.getElementById('previewImg').style.display = 'block';
+          document.getElementById('dzContent').style.display = 'none';
+          document.getElementById('dropzone').classList.add('has-image');
+          document.getElementById('previewFilename').textContent = selectedFile.name;
+          document.getElementById('previewFooter').style.display = 'flex';
+        };
+        reader.readAsDataURL(selectedFile);
+      }
     };
-    reader.readAsDataURL(file);
-    hideResult();
-  }
 
-  function clearImage() {
-    selectedFile = null;
-    document.getElementById('fileInput').value = '';
-    document.getElementById('previewImg').style.display = 'none';
-    document.getElementById('dzContent').style.display = 'block';
-    document.getElementById('previewFooter').style.display = 'none';
-    dropzone.classList.remove('has-image');
-    hideResult();
-  }
+    // Handle clear image (Matches onclick in HTML)
+    window.clearImage = function () {
+      selectedFile = null;
+      document.getElementById('fileInput').value = '';
+      document.getElementById('previewImg').style.display = 'none';
+      document.getElementById('dzContent').style.display = 'block';
+      document.getElementById('dropzone').classList.remove('has-image');
+      document.getElementById('previewFooter').style.display = 'none';
+      document.getElementById('resultBanner').style.display = 'none';
+    };
 
-  function hideResult() {
-    document.getElementById('resultBanner').style.display = 'none';
-  }
+    // Handle verify button click (Matches onclick in HTML)
+    window.submitVerification = async function () {
+      const resultBanner = document.getElementById('resultBanner');
+      const resultTitle = document.getElementById('resultTitle');
+      const resultBody = document.getElementById('resultBody');
+      const btn = document.getElementById('submitBtn');
 
-  // ── Submission ───────────────────────────────────────────────
-  async function submitVerification() {
-    if (isLoading) return;
-
-    const userId = document.getElementById('userIdInput').value.trim();
-    if (!userId) { showResult(false, 'Missing User ID', 'Please enter your User ID.'); return; }
-    if (!selectedFile) { showResult(false, 'No Image Selected', 'Please upload a photo first.'); return; }
-
-    setLoading(true);
-    hideResult();
-
-    try {
-      const imageBase64 = await toBase64(selectedFile);
-      const base64Data  = imageBase64.split(',')[1]; // strip data URL prefix
-
-      const response = await fetch(API_URL, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({ user_id: userId, imageBase64: base64Data }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        showResult(true,
-          'Verification Successful',
-          `${data.message || 'Your photo was verified.'} ${data.points_awarded ? `You earned ${data.points_awarded} points!` : ''}`
-        );
-      } else {
-        showResult(false,
-          'Verification Failed',
-          data.error || data.message || `Server responded with status ${response.status}.`
-        );
+      if (!selectedFile) {
+        resultBanner.style.display = 'block';
+        resultBanner.className = 'result result--error';
+        resultTitle.textContent = 'Missing Image';
+        resultBody.textContent = 'Please upload a photo first.';
+        return;
       }
-    } catch (err) {
-      showResult(false, 'Network Error', 'Could not reach the verification server. Please check your connection and try again.');
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  }
 
-  function toBase64(file) {
-    return new Promise((resolve, reject) => {
+      // Show loading state
+      resultBanner.style.display = 'none';
+      btn.disabled = true;
+      document.getElementById('btnLabel').textContent = 'Verifying...';
+
       const reader = new FileReader();
-      reader.onload  = () => resolve(reader.result);
-      reader.onerror = reject;
-      reader.readAsDataURL(file);
-    });
-  }
+      reader.onloadend = async function () {
+        const base64String = reader.result;
+        const userId = document.getElementById('userIdInput').value;
 
-  function setLoading(val) {
-    isLoading = val;
-    const btn   = document.getElementById('submitBtn');
-    const label = document.getElementById('btnLabel');
-    btn.disabled = val;
+        try {
+          const response = await fetch('http://127.0.0.1:3000/api/verify-social', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              user_id: userId,
+              imageBase64: base64String
+            })
+          });
 
-    if (val) {
-      label.textContent = 'Verifying...';
-      // Replace icon with spinner
-      btn.querySelector('svg').outerHTML = `<div class="spinner"></div>`;
-    } else {
-      label.innerHTML = 'Verify &amp; Earn';
-      // Restore icon
-      const spinner = btn.querySelector('.spinner');
-      if (spinner) {
-        spinner.outerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L13.09 8.26L19 7L15.45 11.73L21 14L15.45 16.27L19 21L13.09 15.74L12 22L10.91 15.74L5 21L8.55 16.27L3 14L8.55 11.73L5 7L10.91 8.26L12 2Z" stroke="white" stroke-width="1.6" stroke-linejoin="round" fill="rgba(255,255,255,.15)"/></svg>`;
-      }
-    }
-  }
+          const data = await response.json();
 
-  function showResult(success, title, body) {
-    const banner = document.getElementById('resultBanner');
-    banner.className = `result result--${success ? 'success' : 'error'}`;
-    document.getElementById('resultTitle').textContent = title;
-    document.getElementById('resultBody').textContent  = body;
-    banner.style.display = 'block';
-    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }
-</script>
+          resultBanner.style.display = 'block';
+
+          if (response.ok && data.verified) {
+            resultBanner.className = 'result result--success';
+            resultTitle.textContent = 'Verified!';
+            resultBody.textContent = data.message || 'You earned 30 points.';
+          } else {
+            resultBanner.className = 'result result--error';
+            resultTitle.textContent = 'Verification Failed';
+            resultBody.textContent = data.reason || data.error || 'The AI could not verify this image.';
+          }
+        } catch (error) {
+          console.error("Fetch Error:", error);
+          resultBanner.style.display = 'block';
+          resultBanner.className = 'result result--error';
+          resultTitle.textContent = 'Network Error';
+          resultBody.textContent = 'Could not reach the verification server. Is it running?';
+        } finally {
+          // Reset button
+          btn.disabled = false;
+          document.getElementById('btnLabel').textContent = 'Verify & Earn';
+        }
+      };
+      reader.readAsDataURL(selectedFile);
+    };
+  </script>
 
 </body>
+
 </html>

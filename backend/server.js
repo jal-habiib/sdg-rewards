@@ -3,7 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const admin = require("firebase-admin");
 const crypto = require("crypto");
-const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { GoogleGenAI } = require("@google/genai");
 
 // ─── Firebase Admin Init ────────────────────────────────────────────────────
 let serviceAccount;
@@ -262,22 +262,28 @@ app.post("/api/verify-social", async (req, res) => {
       return res.status(400).json({ error: "Missing user_id or imageBase64" });
     }
 
-    // Initialize Gemini
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_KEY);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Initialize the new SDK
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_KEY });
 
     const prompt = `Analyze this social media screenshot. Does it show:
 1. A healthy meal (vegetables, fruits, legumes, or whole grains)?
 2. The hashtag #NutritionUG?
 Respond in strict JSON only: {"verified": true/false, "confidence": 0.0-1.0, "reason": "short explanation"}`;
 
-    // Call Gemini API
-    const result = await model.generateContent([
-      prompt,
-      { inlineData: { mimeType: "image/jpeg", data: imageBase64 } },
-    ]);
+    // Extract mime type and raw base64 data
+    const mimeType = imageBase64.match(/data:([a-zA-Z0-9]+\/[a-zA-Z0-9-.+]+).*,.*/)[1];
+    const base64Data = imageBase64.split(',')[1];
 
-    const text = result.response.text();
+    // Call the new model
+    const response = await ai.models.generateContent({
+      model: "gemini-3.8-flash",
+      contents: [
+        prompt,
+        { inlineData: { mimeType: mimeType, data: base64Data } }
+      ]
+    });
+
+    const text = response.text;
     const jsonStr = text.replace(/```json|```/g, "").trim();
     const parsed = JSON.parse(jsonStr);
 
